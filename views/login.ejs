@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="card">
+    <h1>Connexion</h1>
+
+    <% if (typeof error !== "undefined" && error) { %>
+      <div class="msg err"><%= error %></div>
+    <% } %>
+
+    <% if (typeof message !== "undefined" && message) { %>
+      <div class="msg ok"><%= message %></div>
+    <% } %>
+
+    <form method="POST" action="/login">
+      <label>Email
+        <input type="email" name="email" required />
+      </label>
+
+      <label>Mot de passe
+        <input type="password" name="password" required />
+      </label>
+
+      <button type="submit">Se connecter</button>
+    </form>
+
+    <p style="margin-top:16px;opacity:.9">
+      
+    </p>
+  </div>
+</body>
+</html>

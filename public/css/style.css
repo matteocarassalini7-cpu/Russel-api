@@ -1,0 +1,114 @@
+/* ===== BASE ===== */
+body{
+  font-family: Arial;
+  margin: 0;
+  padding: 40px;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+a{
+  color: #93c5fd;
+}
+
+/* ===== LOGIN (card) ===== */
+.card{
+  max-width: 420px;
+  margin: 0 auto;
+  background: #111827;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+
+label{
+  display: block;
+  margin-top: 12px;
+}
+
+input{
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0b1220;
+  color: #e2e8f0;
+}
+
+button{
+  margin-top: 18px;
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: #22c55e;
+  color: #052e16;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.msg{
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.err{
+  background: #3f1d1d;
+  border: 1px solid #ef4444;
+}
+
+.ok{
+  background: #0f2a1a;
+  border: 1px solid #22c55e;
+}
+
+/* ===== DASHBOARD ===== */
+.wrap{
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Important: évite que le max-width:420px du login casse le dashboard */
+.wrap .card{
+  max-width: none;
+  margin: 0 0 14px 0;
+  padding: 18px;
+}
+
+.top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+a.btn, button.btn{
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #0b1220;
+  color: #e2e8f0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn.primary{
+  background: #2563eb;
+  border-color: #1d4ed8;
+}
+
+.btn.danger{
+  background: #ef4444;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+code{
+  background: #0b1220;
+  border: 1px solid #334155;
+  padding: 2px 6px;
+  border-radius: 6px;
+}

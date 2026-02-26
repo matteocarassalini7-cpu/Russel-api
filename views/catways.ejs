@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catways</title>
+  <style>
+    body{font-family:Arial;margin:40px;background:#0f172a;color:#e2e8f0}
+    .wrap{max-width:1100px;margin:auto}
+    .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .card{background:#111827;padding:18px;border-radius:12px;border:1px solid #334155;margin-bottom:14px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border-bottom:1px solid #334155;padding:10px;text-align:left;vertical-align:top}
+    input, select{padding:8px;border-radius:8px;border:1px solid #334155;background:#0b1220;color:#e2e8f0;width:100%}
+    .row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .btn{display:inline-block;padding:8px 10px;border-radius:10px;border:1px solid #334155;background:#0b1220;color:#e2e8f0;text-decoration:none;cursor:pointer}
+    .btn.primary{background:#2563eb;border-color:#1d4ed8}
+    .btn.danger{background:#ef4444;border-color:#dc2626;color:#fff}
+    .btn.ok{background:#22c55e;border-color:#16a34a;color:#052e16;font-weight:bold}
+    .msg{margin-top:12px;padding:10px;border-radius:8px}
+    .err{background:#3f1d1d;border:1px solid #ef4444}
+    .okmsg{background:#0f2a1a;border:1px solid #22c55e}
+    a{color:#93c5fd}
+    code{background:#0b1220;border:1px solid #334155;padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>Catways</h1>
+      <a class="btn" href="/dashboard">← Retour dashboard</a>
+    </div>
+
+    <% if (typeof error !== "undefined" && error) { %>
+      <div class="msg err"><%= error %></div>
+    <% } %>
+    <% if (typeof message !== "undefined" && message) { %>
+      <div class="msg okmsg"><%= message %></div>
+    <% } %>
+
+    <!-- CREATE CATWAY -->
+    <div class="card">
+      <h2>Créer un catway</h2>
+      <form method="POST" action="/catways/create">
+        <div class="row">
+          <div>
+            <label>Catway Number</label>
+            <input type="number" name="catwayNumber" required />
+          </div>
+          <div>
+            <label>Nom</label>
+            <input type="text" name="catwayName" required />
+          </div>
+          <div>
+            <label>Type</label>
+            <select name="type" required>
+              <option value="short">short</option>
+              <option value="long">long</option>
+            </select>
+          </div>
+          <div>
+            <label>État</label>
+            <input type="text" name="catwayState" placeholder="bon état..." required />
+          </div>
+        </div>
+        <button class="btn ok" type="submit" style="margin-top:12px">Créer</button>
+      </form>
+    </div>
+
+    <!-- LIST CATWAYS -->
+    <div class="card">
+      <h2>Liste des catways</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>État</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% (catways || []).forEach(function(c){ %>
+          <tr>
+            <td><strong><%= c.catwayNumber %></strong></td>
+            <td><%= c.catwayName %></td>
+            <td><%= c.type %></td>
+            <td><%= c.catwayState %></td>
+            <td style="min-width:320px">
+
+              <!-- SELECT / OPEN RESERVATIONS -->
+              <a class="btn primary" href="/catways/<%= c.catwayNumber %>">Ouvrir</a>
+
+              <!-- UPDATE -->
+              <details style="display:inline-block;margin-left:8px">
+                <summary class="btn">Modifier</summary>
+                <form method="POST" action="/catways/<%= c.catwayNumber %>/update" style="margin-top:10px">
+                  <div style="display:grid;gap:8px">
+                    <input type="text" name="catwayName" value="<%= c.catwayName %>" required />
+                    <select name="type" required>
+                      <option value="short" <%= c.type === "short" ? "selected" : "" %>>short</option>
+                      <option value="long"  <%= c.type === "long" ? "selected" : "" %>>long</option>
+                    </select>
+                    <input type="text" name="catwayState" value="<%= c.catwayState %>" required />
+                    <button class="btn ok" type="submit">Enregistrer</button>
+                  </div>
+                </form>
+              </details>
+
+              <!-- DELETE -->
+              <form method="POST" action="/catways/<%= c.catwayNumber %>/delete" style="display:inline-block;margin-left:8px">
+                <button class="btn danger" type="submit">Supprimer</button>
+              </form>
+
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+
+      <% if (!catways || catways.length === 0) { %>
+        <p style="opacity:.85;margin-top:12px">Aucun catway pour l’instant.</p>
+      <% } %>
+    </div>
+
+    <!-- RESERVATIONS -->
+    <% if (typeof selectedCatway !== "undefined" && selectedCatway) { %>
+      <div class="card">
+        <h2>Réservations — Catway <code><%= selectedCatway %></code></h2>
+
+        <!-- CREATE RESA -->
+        <h3>Créer une réservation</h3>
+        <form method="POST" action="/catways/<%= selectedCatway %>/reservations/create">
+          <div class="row">
+            <div>
+              <label>Client</label>
+              <input type="text" name="clientName" required />
+            </div>
+            <div>
+              <label>Bateau</label>
+              <input type="text" name="boatName" required />
+            </div>
+            <div>
+              <label>Start (ISO)</label>
+              <input type="text" name="startDate" placeholder="2026-02-20T10:00:00.000Z" required />
+            </div>
+            <div>
+              <label>End (ISO)</label>
+              <input type="text" name="endDate" placeholder="2026-02-20T12:00:00.000Z" required />
+            </div>
+          </div>
+          <button class="btn ok" type="submit" style="margin-top:12px">Créer réservation</button>
+        </form>
+
+        <!-- LIST RESA -->
+        <h3 style="margin-top:20px">Liste</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Client</th>
+              <th>Bateau</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% (reservations || []).forEach(function(r){ %>
+            <tr>
+              <td><code><%= r._id %></code></td>
+              <td><%= r.clientName %></td>
+              <td><%= r.boatName %></td>
+              <td><%= r.startDate %></td>
+              <td><%= r.endDate %></td>
+              <td style="min-width:280px">
+
+                <!-- UPDATE RESA -->
+                <details style="display:inline-block">
+                  <summary class="btn">Modifier</summary>
+                  <form method="POST" action="/catways/<%= selectedCatway %>/reservations/<%= r._id %>/update" style="margin-top:10px">
+                    <div style="display:grid;gap:8px">
+                      <input type="text" name="clientName" value="<%= r.clientName %>" required />
+                      <input type="text" name="boatName" value="<%= r.boatName %>" required />
+                      <input type="text" name="startDate" value="<%= r.startDate %>" required />
+                      <input type="text" name="endDate" value="<%= r.endDate %>" required />
+                      <button class="btn ok" type="submit">Enregistrer</button>
+                    </div>
+                  </form>
+                </details>
+
+                <!-- DELETE RESA -->
+                <form method="POST" action="/catways/<%= selectedCatway %>/reservations/<%= r._id %>/delete" style="display:inline-block;margin-left:8px">
+                  <button class="btn danger" type="submit">Supprimer</button>
+                </form>
+
+              </td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+
+        <% if (!reservations || reservations.length === 0) { %>
+          <p style="opacity:.85;margin-top:12px">Aucune réservation pour ce catway.</p>
+        <% } %>
+      </div>
+    <% } %>
+
+  </div>
+</body>
+</html>

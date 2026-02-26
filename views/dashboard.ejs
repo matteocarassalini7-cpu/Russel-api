@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>Dashboard</h1>
+
+      <form method="POST" action="/logout" style="margin:0">
+        <button class="btn danger" type="submit">Déconnexion</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <p>Connecté.</p>
+
+      <% if (typeof user !== "undefined" && user) { %>
+        <p>
+          Utilisateur :
+          <strong><%= user.username || "—" %></strong>
+          (<%= user.email || "—" %>)
+        </p>
+      <% } %>
+
+      <p style="opacity:.9">
+        Token stocké en cookie côté serveur 
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Catways</h2>
+      <p>Accéder à la gestion CRUD des catways + réservations.</p>
+      <a class="btn primary" href="/catways">Ouvrir Catways</a>
+    </div>
+
+    <% if (typeof message !== "undefined" && message) { %>
+      <div class="card">
+        <strong><%= message %></strong>
+      </div>
+    <% } %>
+
+    <% if (typeof error !== "undefined" && error) { %>
+      <div class="card" style="border-color:#ef4444">
+        <strong style="color:#fecaca"><%= error %></strong>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>
